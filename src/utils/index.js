@@ -39,3 +39,30 @@ export const progressComplete = (data) => {
 
 	return count;
 };
+
+export const convertImageToBase64 = (imageFile) => {
+	const reader = new FileReader();
+	reader.readAsDataURL(imageFile);
+
+	return new Promise((resolve) => {
+		reader.onload = (event) => resolve(event.target.result);
+	});
+};
+
+export const convertString = (str) => {
+	const chars = [...str];
+
+	let convertedString = "";
+
+	for (const char of chars) {
+		if (chars.indexOf(char) === 0) {
+			convertedString += char.toUpperCase();
+		} else if (char.charCodeAt(0) >= 65 && char.charCodeAt(0) <= 90) {
+			convertedString += " " + char;
+		} else {
+			convertedString += char;
+		}
+	}
+
+	return convertedString;
+};
