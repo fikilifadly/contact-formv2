@@ -43,7 +43,6 @@ export const progressComplete = (data) => {
 export const convertImageToBase64 = (imageFile) => {
 	const reader = new FileReader();
 	reader.readAsDataURL(imageFile);
-
 	return new Promise((resolve) => {
 		reader.onload = (event) => resolve(event.target.result);
 	});

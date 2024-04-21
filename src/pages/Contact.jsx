@@ -21,7 +21,23 @@ const Contact = () => {
 		dispatch(getContacts());
 	}, [dispatch]);
 
-	const submitModalHandler = (e) => {
+	const b64 = async (photo, data) => {
+		try {
+			if (photo.files[0]) {
+				if (photo.files[0].type.includes("png") || photo.files[0].type.includes("jpg")) {
+					await convertImageToBase64(photo.files[0]).then((res) => {
+						data.photo = res;
+					});
+				} else {
+					removeModalHandler();
+					return toast.error("Photo must be png or jpg");
+				}
+			}
+		} catch (error) {
+			return;
+		}
+	};
+	const submitModalHandler = async (e) => {
 		e.preventDefault();
 
 		const [firstName, lastName, age, photo] = e.target;
@@ -34,16 +50,8 @@ const Contact = () => {
 			age: +age.value,
 		};
 
-		if (photo.files[0]) {
-			if (photo.files[0].type.includes("png") || photo.files[0].type.includes("jpg")) {
-				convertImageToBase64(photo.files[0]).then((res) => {
-					data.photo = res;
-				});
-			} else {
-				removeModalHandler();
-				return toast.error("Photo must be png or jpg");
-			}
-		}
+		await b64(photo, data);
+		console.log(data);
 
 		if (!currentContact) {
 			console.log("masuk");

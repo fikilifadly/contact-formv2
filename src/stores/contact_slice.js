@@ -120,6 +120,8 @@ export const getContacts = createAsyncThunk("contact/getContacts", async (_, { r
 
 export const addContact = createAsyncThunk("contact/addContact", async (data, { rejectWithValue }) => {
 	try {
+		console.log(data, "====");
+
 		const { data: contact } = await axiosContact({
 			method: "POST",
 			data,
