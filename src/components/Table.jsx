@@ -1,43 +1,17 @@
 import React from "react";
-import { convertString, showModalHandler } from "../utils";
+import { convertString, isProfileExist, showModalHandler } from "../utils";
 
-const TableFC = ({ fields: headerFields, data: rows, isLoading, modalId, onGetRowById, onEditRow, onDeleteRow }) => {
-	const renderHeaderCells = () => headerFields.map((field, index) => <th key={index}>{convertString(field)}</th>);
+const TableFC = ({ fields, data, loading, idModal, getDataByIdHandler }) => {
+	const ctaHandler = (e) => {
+		const { id, action } = e.currentTarget.dataset;
 
-	const renderRowCells = (row) =>
-		headerFields.map((field, index) => {
-			if (field === "photo") {
-				return (
-					<td key={index}>
-						<img src={row[field]} alt={row[field]} className="w-10 h-10 rounded-full" />
-					</td>
-				);
-			}
-
-			return <td key={index}>{row[field]}</td>;
-		});
-
-	const renderActionButtons = (row) => (
-		<td>
-			<div className="flex gap-3">
-				<button className="bg-yellow-400 px-2 py-1 rounded-md text-xs" data-id={row.id} data-action="edit" onClick={onEditRow}>
-					Edit
-				</button>
-				<button className="bg-red-600 px-2 py-1 rounded-md text-xs text-white" data-id={row.id} data-action="delete" onClick={onDeleteRow}>
-					Delete
-				</button>
-			</div>
-		</td>
-	);
-
-	const renderRows = () =>
-		rows.map((row, index) => (
-			<tr key={index}>
-				<td>{index + 1}</td>
-				{renderRowCells(row)}
-				{renderActionButtons(row)}
-			</tr>
-		));
+		getDataByIdHandler(id);
+		if (action === "edit") {
+			showModalHandler();
+		} else {
+			showModalHandler(idModal);
+		}
+	};
 
 	return (
 		<div className="overflow-x-auto">
@@ -45,21 +19,49 @@ const TableFC = ({ fields: headerFields, data: rows, isLoading, modalId, onGetRo
 				<thead>
 					<tr>
 						<th>No</th>
-						{renderHeaderCells()}
+						{fields.map((field, index) => (
+							<th key={index}>{convertString(field[0])}</th>
+						))}
 						<th>Action</th>
 					</tr>
 				</thead>
 				<tbody>
-					{isLoading && (
+					{loading && (
 						<tr>
-							<td colSpan={headerFields.length + 2}>
+							<td colSpan={fields.length + 2}>
 								<div className="h-full flex items-center justify-center">
-									<span className="loading loading-spinner  h-[300px] w-[300px]" />
+									<span className="loading loading-spinner  h-[300px] w-[300px]"></span>
 								</div>
 							</td>
 						</tr>
 					)}
-					{!isLoading && rows.length > 0 && renderRows()}
+					{!loading &&
+						data.length > 0 &&
+						data.map((item, index) => (
+							<tr key={index}>
+								<td>{index + 1}</td>
+								{fields.map((field, fieldIndex) => {
+									if (field[0] === "photo") {
+										return (
+											<td key={fieldIndex}>
+												<img src={isProfileExist(item[field[0]])} alt={item[field[0]]} className="w-10 h-10 rounded-full" />
+											</td>
+										);
+									}
+									return <td key={fieldIndex}>{item[field[0]]}</td>;
+								})}
+								<td>
+									<div className="flex gap-3">
+										<button className="bg-yellow-400 px-5 py-2 rounded-md text-xs" data-id={item.id} data-action="edit" onClick={ctaHandler}>
+											Edit
+										</button>
+										<button className="bg-red-600 px-5 py-2 rounded-md text-xs text-white" data-id={item.id} data-action="delete" onClick={ctaHandler}>
+											Delete
+										</button>
+									</div>
+								</td>
+							</tr>
+						))}
 				</tbody>
 			</table>
 		</div>

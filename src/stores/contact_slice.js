@@ -134,14 +134,14 @@ export const updateContact = createAsyncThunk("contact/updateContact", async (da
 	try {
 		const id = data.id;
 		delete data.id;
-		console.log(data, id, " ===== redux");
+		data = JSON.stringify(data);
 
-		delete data.id;
+		console.log(data);
 
 		const contact = await axiosContact.put(`/${id}`, data);
 		return contact;
 	} catch (err) {
-		return rejectWithValue(err.response.data);
+		return rejectWithValue(err);
 	}
 });
 

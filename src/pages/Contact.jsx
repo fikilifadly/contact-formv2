@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addContact, deleteContact, getContactById, getContacts, setNullCurrentContact, updateContact } from "../stores/contact_slice";
-import { convertImageToBase64, convertString, removeModalHandler, showModalHandler } from "../utils";
+import { convertImageToBase64, convertString, isProfileExist, removeModalHandler, showModalHandler } from "../utils";
 import Table from "../components/Table";
 import Modal from "../components/Modal";
 import { toast } from "react-toastify";
@@ -19,7 +19,7 @@ const Contact = () => {
 
 	useEffect(() => {
 		dispatch(getContacts());
-	}, []);
+	}, [dispatch]);
 
 	const submitModalHandler = (e) => {
 		e.preventDefault();
@@ -111,7 +111,7 @@ const Contact = () => {
 										{el[1] === "file" && currentContact?.photo && (
 											<div className="flex flex-col gap-2 items-center">
 												<span className="text-xs">Previous Photo</span>
-												<img src={currentContact?.photo} alt={currentContact?.photo} className="w-14 h-14 rounded-md" />
+												<img src={isProfileExist(currentContact?.photo)} alt={currentContact?.photo} className="w-14 h-14 rounded-md" />
 											</div>
 										)}
 									</div>

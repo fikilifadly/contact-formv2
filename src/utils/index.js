@@ -66,3 +66,19 @@ export const convertString = (str) => {
 
 	return convertedString;
 };
+
+export const matchUser = (snapshot, credentials) => {
+	console.log("first");
+
+	const match = Object.entries(snapshot).find(([id, [user]]) => user.email === credentials.email && user.password === credentials.password);
+	const { username } = match[1][0];
+
+	return match ? username : null;
+};
+
+export const isProfileExist = (src) => {
+	if (src.includes("png") || src.includes("png") || src.includes("64") || src.includes("http")) {
+		return src;
+	}
+	return "https://www.arundelparkrda.com.au/wp-content/uploads/2017/07/noprofile.png";
+};
