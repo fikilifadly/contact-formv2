@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux";
 import { login } from "../stores/user_slice";
 import CustomForm from "../components/CustomForm";
+import { useNavigate } from "react-router-dom";
 
 const loginFields = [
 	{ type: "email", name: "email", placeholder: "Email Address" },
@@ -8,11 +9,15 @@ const loginFields = [
 ];
 const Login = () => {
 	const dispatch = useDispatch();
-	// const navigate = useNavigate();
+	const navigate = useNavigate();
 
 	const onSubmitHandler = (e) => {
 		e.preventDefault();
-		dispatch(login({ email: e.target.email.value, password: e.target.password.value }));
+		dispatch(login({ email: e.target.email.value, password: e.target.password.value })).then((res) => {
+			if (!res.error) {
+				navigate("/");
+			}
+		});
 	};
 
 	return (

@@ -55,6 +55,7 @@ export const login = createAsyncThunk("user/login", async (data, { rejectWithVal
 		const response = await readDatabase("/users");
 
 		const users = await isUserExist(response, data);
+		localStorage.setItem("currentUser", users);
 
 		return users;
 	} catch (err) {
