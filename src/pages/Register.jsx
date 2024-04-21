@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { register } from "../stores/user_slice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CustomForm from "../components/CustomForm";
 
 const inputFields = [
@@ -30,12 +30,17 @@ const inputFields = [
 ];
 
 const Register = () => {
+	const { loading } = useSelector((state) => state.user);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
 	const onSubmitHandler = (e) => {
 		e.preventDefault();
 		const [username, email, password, _, repassword] = e.target;
+
+		if (!username.value) return toast.error("Please fill username");
+		if (!email.value) return toast.error("Please fill email");
+		if (!password.value) return toast.error("Please fill password");
 
 		const isMatched = password.value === repassword.value;
 		if (!isMatched) {
@@ -49,6 +54,7 @@ const Register = () => {
 		};
 
 		dispatch(register(data)).then(() => {
+			toast.success("Register Success, Please Login");
 			navigate("/login");
 		});
 	};
@@ -57,7 +63,7 @@ const Register = () => {
 		<>
 			<h1 className="mt-3 text-2xl font-medium text-center text-gray-600 dark:text-gray-200">Register</h1>
 
-			<CustomForm onSubmitHandler={onSubmitHandler} inputFields={inputFields} type={"login"} />
+			<CustomForm loading={loading} onSubmitHandler={onSubmitHandler} inputFields={inputFields} type={"login"} />
 		</>
 	);
 };

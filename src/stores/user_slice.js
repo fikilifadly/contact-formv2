@@ -25,11 +25,9 @@ const userSlice = createSlice({
 				state.loading = false;
 				state.currentUser = action.payload;
 			})
-			.addCase(login.rejected, (state, action) => {
+			.addCase(login.rejected, (state) => {
 				state.loading = false;
-				console.log(action, "====");
-				state.errorMessage = action.error.message;
-				toast.error(state.errorMessage);
+				toast.error("Invalid Username/Password");
 			});
 
 		builder
@@ -43,7 +41,7 @@ const userSlice = createSlice({
 			.addCase(register.rejected, (state, action) => {
 				console.log("reject");
 				state.loading = false;
-				console.log(action, "====");
+
 				state.errorMessage = action.error.message;
 				toast.error(state.errorMessage);
 			});

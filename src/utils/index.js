@@ -71,9 +71,12 @@ export const matchUser = (snapshot, credentials) => {
 	console.log("first");
 
 	const match = Object.entries(snapshot).find(([id, [user]]) => user.email === credentials.email && user.password === credentials.password);
+	if (!match) {
+		return null;
+	}
 	const { username } = match[1][0];
 
-	return match ? username : null;
+	return username;
 };
 
 export const isProfileExist = (src) => {
